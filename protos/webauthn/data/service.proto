@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package webauthn.data;
+
+import "identity/data/record.proto";
+import "token/grant_hash.proto";
+import "webauthn/challenge.proto";
+import "webauthn/credential.proto";
+import "webauthn/data/credential/record.proto";
+import "webauthn/data/login/state.proto";
+
+// Service serves the data operations of the WebAuthn mechanism: its
+// credentials, and the identity each one authenticates. Each RPC is one
+// operation performed indivisibly.
+service Service {
+  // Establishes an identity with its credential. Refuses when either is
+  // already established, and establishes nothing.
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+
+  // Consumes the exact challenge and records the authentication: the
+  // credential's login state, and the identity's new grant and when it
+  // authenticated. Refuses when the challenge is not current, and records
+  // nothing.
+  rpc Login(LoginRequest) returns (LoginResponse);
+
+  // The credential's record. Refuses an unknown credential.
+  rpc GetCredential(GetCredentialRequest) returns (GetCredentialResponse);
+
+  // Replaces the credential's login challenge; answers once it is durable.
+  // Refuses an unknown credential.
+  rpc SetLoginChallenge(SetLoginChallengeRequest) returns (SetLoginChallengeResponse);
+}
+
+message RegisterRequest {
+  identity.data.Record identity_record = 1;
+  credential.Record credential_record = 2;
+}
+
+message RegisterResponse {}
+
+message LoginRequest {
+  webauthn.Credential credential = 1;
+  login.State login_state = 2;
+  token.GrantHash grant_hash = 3;
+  int64 last_authenticated_date = 4;
+}
+
+message LoginResponse {}
+
+message GetCredentialRequest {
+  webauthn.Credential credential = 1;
+}
+
+message GetCredentialResponse {
+  credential.Record record = 1;
+}
+
+message SetLoginChallengeRequest {
+  webauthn.Credential credential = 1;
+  webauthn.Challenge challenge = 2;
+}
+
+message SetLoginChallengeResponse {}
