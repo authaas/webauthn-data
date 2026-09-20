@@ -4,8 +4,8 @@ package webauthn.data;
 
 import "identity/data/record.proto";
 import "token/grant_hash.proto";
-import "webauthn/challenge.proto";
-import "webauthn/credential.proto";
+import "webauthn/ceremony/challenge.proto";
+import "webauthn/credential/id.proto";
 import "webauthn/data/credential/record.proto";
 import "webauthn/data/login/state.proto";
 
@@ -39,7 +39,7 @@ message RegisterRequest {
 message RegisterResponse {}
 
 message LoginRequest {
-  webauthn.Credential credential = 1;
+  webauthn.credential.ID credential = 1;
   login.State login_state = 2;
   token.GrantHash grant_hash = 3;
   int64 last_authenticated_date = 4;
@@ -48,7 +48,7 @@ message LoginRequest {
 message LoginResponse {}
 
 message GetCredentialRequest {
-  webauthn.Credential credential = 1;
+  webauthn.credential.ID credential = 1;
 }
 
 message GetCredentialResponse {
@@ -56,8 +56,8 @@ message GetCredentialResponse {
 }
 
 message SetLoginChallengeRequest {
-  webauthn.Credential credential = 1;
-  webauthn.Challenge challenge = 2;
+  webauthn.credential.ID credential = 1;
+  ceremony.Challenge challenge = 2;
 }
 
 message SetLoginChallengeResponse {}

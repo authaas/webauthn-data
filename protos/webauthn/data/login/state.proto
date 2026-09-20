@@ -2,13 +2,13 @@ syntax = "proto3";
 
 package webauthn.data.login;
 
-import "webauthn/challenge.proto";
+import "webauthn/ceremony/challenge.proto";
 
 // State is what a login reads and rewrites on a credential: the challenge
 // outstanding, and the verifier's counters and flags.
 message State {
   // Unset when none is outstanding.
-  webauthn.Challenge challenge = 1;
+  ceremony.Challenge challenge = 1;
   uint32 sign_count = 2;
   bool backup_state = 3;
   bool uv_initialized = 4;
