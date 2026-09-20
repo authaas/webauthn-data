@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.2.0 - 2026-09-20
+#### Features
+- align namespaces - (40a0e58) - Nathan Blair
+
+- - -
+
 ## 0.1.0 - 2026-09-20
 #### Features
 - initial release - (b2cc8a5) - Nathan Blair
