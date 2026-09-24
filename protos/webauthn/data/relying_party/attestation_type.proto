@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package webauthn.data.relying_party;
+
+// AttestationType is what a verified attestation statement establishes about
+// the authenticator that produced a credential.
+enum AttestationType {
+  ATTESTATION_TYPE_UNSPECIFIED = 0;
+  ATTESTATION_TYPE_NONE = 1;
+  ATTESTATION_TYPE_SELF = 2;
+  ATTESTATION_TYPE_BASIC = 3;
+  ATTESTATION_TYPE_ATT_CA = 4;
+  ATTESTATION_TYPE_ANON_CA = 5;
+}

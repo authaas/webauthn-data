@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package webauthn.data.relying_party;
+
+import "google/protobuf/struct.proto";
+import "realm/id.proto";
+import "webauthn/data/relying_party/attestation_type.proto";
+import "webauthn/data/relying_party/revocation_mode.proto";
+import "webauthn/modality/attachment.proto";
+import "webauthn/relying_party/conveyance_preference.proto";
+import "webauthn/relying_party/cose_algorithm.proto";
+import "webauthn/relying_party/entity.proto";
+import "webauthn/relying_party/user_verification.proto";
+
+// Record is one WebAuthn deployment of a realm: the relying party a ceremony
+// runs against, what the ceremony asks the client for, and what a completed
+// ceremony is held to.
+message Record {
+  .realm.ID realm_id = 1;
+  .webauthn.relying_party.Entity rp = 2;
+
+  // What the ceremony asks for.
+  .webauthn.modality.Attachment attachment = 3;
+  .webauthn.relying_party.UserVerification user_verification = 4;
+  .webauthn.relying_party.ConveyancePreference attestation = 5;
+  repeated string attestation_formats = 6;
+  repeated string hints = 7;
+  repeated .webauthn.relying_party.CoseAlgorithm algorithms = 8;
+  google.protobuf.Struct extensions = 9;
+  uint32 timeout = 10;
+
+  // What a completed ceremony is held to.
+  repeated string origins = 11;
+  bool origin_enforced = 12;
+  bool cross_origin_enforced = 13;
+  repeated string top_origins = 14;
+  bool rp_id_hash_mismatch_allowed = 15;
+  bool backup_flags_enforced = 16;
+  bool backup_eligibility_enforced = 17;
+  bool sign_count_enforced = 18;
+  bool uv_transition_allowed = 19;
+
+  // The attestation a registration may present, and the material a
+  // certificate-based one is chained against.
+  repeated string allowed_attestation_formats = 20;
+  repeated AttestationType allowed_attestation_types = 21;
+  repeated bytes trust_anchors = 22;
+  repeated bytes intermediate_certificates = 23;
+  RevocationMode revocation_mode = 24;
+  repeated bytes certificate_revocation_lists = 25;
+  bool attestation_downgrade_allowed = 26;
+  bool login_attestation_enforced = 27;
+}

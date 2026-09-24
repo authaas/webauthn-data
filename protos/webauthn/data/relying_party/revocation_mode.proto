@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package webauthn.data.relying_party;
+
+// RevocationMode is how a certificate whose revocation status cannot be
+// obtained is treated.
+enum RevocationMode {
+  REVOCATION_MODE_UNSPECIFIED = 0;
+  // Status is not consulted.
+  REVOCATION_MODE_UNCHECKED = 1;
+  // An unavailable answer is ignored.
+  REVOCATION_MODE_SOFT_FAIL = 2;
+  // An unavailable answer refuses the registration.
+  REVOCATION_MODE_HARD_FAIL = 3;
+}

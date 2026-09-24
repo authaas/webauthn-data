@@ -2,53 +2,58 @@ syntax = "proto3";
 
 package webauthn.data;
 
-import "identity/data/record.proto";
+import "identity/data/identity/record.proto";
+import "identity/data/realm/membership.proto";
+import "realm/id.proto";
 import "token/grant_hash.proto";
 import "webauthn/ceremony/challenge.proto";
 import "webauthn/credential/id.proto";
 import "webauthn/data/credential/record.proto";
 import "webauthn/data/login/state.proto";
+import "webauthn/data/relying_party/record.proto";
+import "webauthn/relying_party/id.proto";
 
-// Service serves the data operations of the WebAuthn mechanism: its
-// credentials, and the identity each one authenticates. Each RPC is one
-// operation performed indivisibly.
+// Service serves the data operations of the WebAuthn mechanism: its relying
+// parties, its credentials, and the identity each credential authenticates.
 service Service {
-  // Establishes an identity with its credential. Refuses when either is
-  // already established, and establishes nothing.
+  // Establishes an identity in the realm and its credential.
   rpc Register(RegisterRequest) returns (RegisterResponse);
 
-  // Consumes the exact challenge and records the authentication: the
-  // credential's login state, and the identity's new grant and when it
-  // authenticated. Refuses when the challenge is not current, and records
-  // nothing.
+  // Consumes the login challenge and records the authentication.
   rpc Login(LoginRequest) returns (LoginResponse);
 
-  // The credential's record. Refuses an unknown credential.
+  // The credential's record.
   rpc GetCredential(GetCredentialRequest) returns (GetCredentialResponse);
 
-  // Replaces the credential's login challenge; answers once it is durable.
-  // Refuses an unknown credential.
+  // Replaces the credential's login challenge.
   rpc SetLoginChallenge(SetLoginChallengeRequest) returns (SetLoginChallengeResponse);
+
+  // The relying party's record.
+  rpc GetRelyingParty(GetRelyingPartyRequest) returns (GetRelyingPartyResponse);
+
+  // Establishes the relying party.
+  rpc SetRelyingParty(SetRelyingPartyRequest) returns (SetRelyingPartyResponse);
 }
 
 message RegisterRequest {
-  identity.data.Record identity_record = 1;
-  credential.Record credential_record = 2;
+  .identity.data.identity.Record identity = 1;
+  .identity.data.realm.Membership membership = 2;
+  credential.Record credential = 3;
 }
 
 message RegisterResponse {}
 
 message LoginRequest {
-  webauthn.credential.ID credential = 1;
-  login.State login_state = 2;
-  token.GrantHash grant_hash = 3;
+  .webauthn.credential.ID credential_id = 1;
+  login.State login = 2;
+  .token.GrantHash grant_hash = 3;
   int64 last_authenticated_date = 4;
 }
 
 message LoginResponse {}
 
 message GetCredentialRequest {
-  webauthn.credential.ID credential = 1;
+  .webauthn.credential.ID credential_id = 1;
 }
 
 message GetCredentialResponse {
@@ -56,8 +61,23 @@ message GetCredentialResponse {
 }
 
 message SetLoginChallengeRequest {
-  webauthn.credential.ID credential = 1;
-  ceremony.Challenge challenge = 2;
+  .webauthn.credential.ID credential_id = 1;
+  .webauthn.ceremony.Challenge challenge = 2;
 }
 
 message SetLoginChallengeResponse {}
+
+message GetRelyingPartyRequest {
+  .realm.ID realm_id = 1;
+  .webauthn.relying_party.ID rp_id = 2;
+}
+
+message GetRelyingPartyResponse {
+  relying_party.Record record = 1;
+}
+
+message SetRelyingPartyRequest {
+  relying_party.Record record = 1;
+}
+
+message SetRelyingPartyResponse {}
